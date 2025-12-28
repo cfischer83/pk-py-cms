@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page.get_seo_title }} - {{ site_name }}{% endblock %}
+{% block meta_description %}{{ page.get_seo_description }}{% endblock %}
+
+{% block content %}
+<article class="py-12">
+    <header class="mb-8 max-w-full px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-6 text-center">{{ page.title }}</h1>
+        
+        {% if page.excerpt %}
+            <p class="text-xl text-secondary-600 text-center max-w-3xl mx-auto">{{ page.excerpt }}</p>
+        {% endif %}
+    </header>
+    
+    {% if page.featured_image %}
+        <figure class="mb-8">
+            <img src="{{ page.featured_image.url }}" 
+                 alt="{{ page.featured_image.alt_text|default:page.title }}" 
+                 class="w-full max-h-96 object-cover">
+        </figure>
+    {% endif %}
+    
+    <div class="prose max-w-none px-4 sm:px-6 lg:px-8">
+        {{ page.content.html|safe }}
+    </div>
+</article>
+{% endblock %}

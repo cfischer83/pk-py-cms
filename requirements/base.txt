@@ -1,0 +1,20 @@
+# Django
+Django>=5.1,<5.2
+
+# PostgreSQL adapter
+psycopg2-binary>=2.9.9
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Image processing
+Pillow>=10.2.0
+
+# Rich text editor
+django-quill-editor>=0.1.40
+
+# Slug generation
+python-slugify>=8.0.1
+
+# Time zone support
+pytz>=2024.1

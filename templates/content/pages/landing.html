@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page.get_seo_title }} - {{ site_name }}{% endblock %}
+{% block meta_description %}{{ page.get_seo_description }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+{% if page.featured_image %}
+    <section class="relative h-96 bg-cover bg-center" style="background-image: url('{{ page.featured_image.url }}');">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
+            <div class="text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ page.title }}</h1>
+                {% if page.excerpt %}
+                    <p class="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto">{{ page.excerpt }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% else %}
+    <section class="bg-gradient-to-br from-primary-500 to-primary-700 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ page.title }}</h1>
+            {% if page.excerpt %}
+                <p class="text-xl md:text-2xl text-primary-100 max-w-2xl mx-auto">{{ page.excerpt }}</p>
+            {% endif %}
+        </div>
+    </section>
+{% endif %}
+
+<!-- Content -->
+<article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="prose max-w-none">
+        {{ page.content.html|safe }}
+    </div>
+</article>
+{% endblock %}

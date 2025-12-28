@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page.get_seo_title }} - {{ site_name }}{% endblock %}
+{% block meta_description %}{{ page.get_seo_description }}{% endblock %}
+
+{% block content %}
+<article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <header class="mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">{{ page.title }}</h1>
+        
+        {% if page.excerpt %}
+            <p class="text-xl text-secondary-600">{{ page.excerpt }}</p>
+        {% endif %}
+    </header>
+    
+    <!-- Featured Image -->
+    {% if page.featured_image %}
+        <figure class="mb-8">
+            <img src="{{ page.featured_image.url }}" 
+                 alt="{{ page.featured_image.alt_text|default:page.title }}" 
+                 class="w-full rounded-lg shadow-lg">
+            {% if page.featured_image.caption %}
+                <figcaption class="text-center text-sm text-secondary-500 mt-3">
+                    {{ page.featured_image.caption }}
+                </figcaption>
+            {% endif %}
+        </figure>
+    {% endif %}
+    
+    <!-- Content -->
+    <div class="prose max-w-none">
+        {{ page.content.html|safe }}
+    </div>
+    
+    <!-- Edit Link -->
+    {% if user.is_authenticated and user.can_edit_content %}
+        <div class="mt-8 pt-8 border-t border-secondary-200">
+            <a href="{% url 'admin:content_page_change' page.pk %}" class="btn btn-secondary text-sm">
+                Edit Page
+            </a>
+        </div>
+    {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Search: {{ query }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold text-secondary-900 mb-8">
+        {% if query %}
+            Search results for "{{ query }}"
+        {% else %}
+            Search
+        {% endif %}
+    </h1>
+    
+    <!-- Search Form -->
+    <form action="{% url 'core:search' %}" method="get" class="mb-8">
+        <div class="flex gap-4">
+            <input type="text" name="q" value="{{ query }}" 
+                   class="flex-grow form-input" 
+                   placeholder="Search posts, pages, and more...">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    
+    {% if query %}
+        <!-- Pages Results -->
+        {% if pages %}
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-secondary-900 mb-4">Pages</h2>
+                <div class="space-y-4">
+                    {% for page in pages %}
+                        <div class="bg-white p-4 rounded-lg border border-secondary-200">
+                            <h3 class="text-lg font-medium text-secondary-900">
+                                <a href="{{ page.get_absolute_url }}" class="hover:text-primary-500">{{ page.title }}</a>
+                            </h3>
+                            {% if page.excerpt %}
+                                <p class="text-secondary-600 mt-1">{{ page.excerpt|truncatewords:30 }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        <!-- Posts Results -->
+        <div>
+            <h2 class="text-xl font-semibold text-secondary-900 mb-4">
+                Posts 
+                <span class="text-secondary-500 font-normal">({{ results|length }} result{{ results|pluralize }})</span>
+            </h2>
+            
+            {% if results %}
+                <div class="space-y-6">
+                    {% for post in results %}
+                        <article class="bg-white p-6 rounded-lg border border-secondary-200 hover:shadow-sm transition-shadow">
+                            <h3 class="text-xl font-semibold text-secondary-900 mb-2">
+                                <a href="{{ post.get_absolute_url }}" class="hover:text-primary-500">{{ post.title }}</a>
+                            </h3>
+                            {% if post.excerpt %}
+                                <p class="text-secondary-600 mb-3">{{ post.excerpt|truncatewords:40 }}</p>
+                            {% endif %}
+                            <div class="flex items-center text-sm text-secondary-500">
+                                <span>By {{ post.author.get_display_name }}</span>
+                                <span class="mx-2">•</span>
+                                <span>{{ post.published_at|date:"M d, Y" }}</span>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if is_paginated %}
+                    <nav class="mt-8 flex justify-center">
+                        <div class="flex space-x-2">
+                            {% if page_obj.has_previous %}
+                                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" 
+                                   class="btn btn-secondary">Previous</a>
+                            {% endif %}
+                            
+                            <span class="px-4 py-2 text-secondary-600">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                            
+                            {% if page_obj.has_next %}
+                                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" 
+                                   class="btn btn-secondary">Next</a>
+                            {% endif %}
+                        </div>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="bg-white p-8 rounded-lg border border-secondary-200 text-center">
+                    <p class="text-secondary-500">No posts found matching your search.</p>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="bg-white p-8 rounded-lg border border-secondary-200 text-center">
+            <p class="text-secondary-500">Enter a search term to find content.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

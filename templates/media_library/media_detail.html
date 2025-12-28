@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ media.title }} - Media Library - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-6">
+        <a href="{% url 'media_library:media_list' %}" class="text-primary-500 hover:text-primary-600">
+            ← Back to Media Library
+        </a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-secondary-200 overflow-hidden">
+        <!-- Preview -->
+        <div class="bg-secondary-100 p-8 flex items-center justify-center min-h-[300px]">
+            {% if media.is_image %}
+                <img src="{{ media.url }}" alt="{{ media.alt_text|default:media.title }}" 
+                     class="max-w-full max-h-[500px] rounded shadow-lg">
+            {% elif media.media_type == 'video' %}
+                <video controls class="max-w-full max-h-[500px] rounded shadow-lg">
+                    <source src="{{ media.url }}" type="{{ media.mime_type }}">
+                    Your browser does not support the video tag.
+                </video>
+            {% elif media.media_type == 'audio' %}
+                <audio controls class="w-full max-w-md">
+                    <source src="{{ media.url }}" type="{{ media.mime_type }}">
+                    Your browser does not support the audio tag.
+                </audio>
+            {% else %}
+                <div class="text-center">
+                    <svg class="w-24 h-24 text-secondary-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <a href="{{ media.url }}" target="_blank" class="btn btn-primary">Download File</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Details -->
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-secondary-900 mb-4">{{ media.title }}</h1>
+            
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <dt class="text-sm text-secondary-500">File Name</dt>
+                    <dd class="text-secondary-900">{{ media.filename }}</dd>
+                </div>
+                
+                <div>
+                    <dt class="text-sm text-secondary-500">Type</dt>
+                    <dd class="text-secondary-900 capitalize">{{ media.get_media_type_display }}</dd>
+                </div>
+                
+                <div>
+                    <dt class="text-sm text-secondary-500">File Size</dt>
+                    <dd class="text-secondary-900">{{ media.get_size_display }}</dd>
+                </div>
+                
+                {% if media.width and media.height %}
+                    <div>
+                        <dt class="text-sm text-secondary-500">Dimensions</dt>
+                        <dd class="text-secondary-900">{{ media.width }} × {{ media.height }} px</dd>
+                    </div>
+                {% endif %}
+                
+                <div>
+                    <dt class="text-sm text-secondary-500">Uploaded By</dt>
+                    <dd class="text-secondary-900">{{ media.uploaded_by.get_display_name|default:"Unknown" }}</dd>
+                </div>
+                
+                <div>
+                    <dt class="text-sm text-secondary-500">Uploaded On</dt>
+                    <dd class="text-secondary-900">{{ media.created_at|date:"F d, Y H:i" }}</dd>
+                </div>
+            </dl>
+            
+            {% if media.alt_text %}
+                <div class="mb-4">
+                    <dt class="text-sm text-secondary-500">Alt Text</dt>
+                    <dd class="text-secondary-900">{{ media.alt_text }}</dd>
+                </div>
+            {% endif %}
+            
+            {% if media.caption %}
+                <div class="mb-4">
+                    <dt class="text-sm text-secondary-500">Caption</dt>
+                    <dd class="text-secondary-900">{{ media.caption }}</dd>
+                </div>
+            {% endif %}
+            
+            <!-- URL Copy -->
+            <div class="bg-secondary-50 rounded-lg p-4 mb-6">
+                <label class="block text-sm font-medium text-secondary-700 mb-2">File URL</label>
+                <div class="flex">
+                    <input type="text" value="{{ site_url }}{{ media.url }}" readonly 
+                           class="flex-grow form-input rounded-r-none" id="media-url">
+                    <button onclick="copyUrl()" class="btn btn-secondary rounded-l-none border-l-0">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex justify-between items-center">
+                <a href="{{ media.url }}" download class="btn btn-secondary">
+                    Download
+                </a>
+                
+                <a href="{% url 'media_library:media_delete' media.pk %}" 
+                   class="btn bg-red-500 text-white hover:bg-red-600 focus:ring-red-500">
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyUrl() {
+    const input = document.getElementById('media-url');
+    input.select();
+    document.execCommand('copy');
+    alert('URL copied to clipboard!');
+}
+</script>
+{% endblock %}

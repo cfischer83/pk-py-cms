@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        <div class="bg-white rounded-lg shadow-sm border border-secondary-200 p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-secondary-900">Welcome Back</h1>
+                <p class="text-secondary-600 mt-2">Sign in to your account</p>
+            </div>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="id_email" class="block text-sm font-medium text-secondary-700 mb-1">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-secondary-700 mb-1">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.password.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
+                        {{ form.non_field_errors.0 }}
+                    </div>
+                {% endif %}
+                
+                <div class="flex items-center justify-between">
+                    <a href="{% url 'users:password_reset' %}" class="text-sm text-primary-500 hover:text-primary-600">
+                        Forgot your password?
+                    </a>
+                </div>
+                
+                <button type="submit" class="w-full btn btn-primary py-3">
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-secondary-600">
+                    Don't have an account? 
+                    <a href="{% url 'users:register' %}" class="text-primary-500 hover:text-primary-600 font-medium">
+                        Sign up
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

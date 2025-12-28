@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}500 - Server Error - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+        <h1 class="text-9xl font-bold text-primary-500">500</h1>
+        <h2 class="text-3xl font-bold text-secondary-900 mt-4">Server Error</h2>
+        <p class="text-secondary-600 mt-2 mb-8">
+            Something went wrong on our end. Please try again later.
+        </p>
+        <a href="{% url 'core:home' %}" class="btn btn-primary">
+            Go Home
+        </a>
+    </div>
+</div>
+{% endblock %}

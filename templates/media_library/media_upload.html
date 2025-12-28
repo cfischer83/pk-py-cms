@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Media - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-6">
+        <a href="{% url 'media_library:media_list' %}" class="text-primary-500 hover:text-primary-600">
+            ← Back to Media Library
+        </a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-secondary-200 p-8">
+        <h1 class="text-2xl font-bold text-secondary-900 mb-6">Upload Media</h1>
+        
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="id_file" class="block text-sm font-medium text-secondary-700 mb-1">File</label>
+                <div class="border-2 border-dashed border-secondary-300 rounded-lg p-6 text-center hover:border-primary-500 transition-colors">
+                    {{ form.file }}
+                    <p class="mt-2 text-sm text-secondary-500">
+                        Drag and drop or click to select a file
+                    </p>
+                    <p class="text-xs text-secondary-400 mt-1">
+                        Supports images, videos, audio, and documents
+                    </p>
+                </div>
+                {% if form.file.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.file.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="id_title" class="block text-sm font-medium text-secondary-700 mb-1">Title (Optional)</label>
+                {{ form.title }}
+                <p class="mt-1 text-sm text-secondary-500">If left empty, the filename will be used</p>
+                {% if form.title.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="id_alt_text" class="block text-sm font-medium text-secondary-700 mb-1">Alt Text (Optional)</label>
+                {{ form.alt_text }}
+                <p class="mt-1 text-sm text-secondary-500">Descriptive text for accessibility (recommended for images)</p>
+                {% if form.alt_text.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.alt_text.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="id_caption" class="block text-sm font-medium text-secondary-700 mb-1">Caption (Optional)</label>
+                {{ form.caption }}
+                {% if form.caption.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.caption.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="flex justify-end space-x-4">
+                <a href="{% url 'media_library:media_list' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

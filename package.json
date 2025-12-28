@@ -1,0 +1,15 @@
+{
+  "name": "pk-py-cms",
+  "version": "1.0.0",
+  "description": "PK PY CMS - Django Content Management System",
+  "scripts": {
+    "dev": "tailwindcss -i ./static/css/tailwind.input.css -o ./static/css/tw-compiled.css --watch",
+    "build": "tailwindcss -i ./static/css/tailwind.input.css -o ./static/css/tw-compiled.css --minify"
+  },
+  "keywords": ["django", "cms", "tailwind"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}
