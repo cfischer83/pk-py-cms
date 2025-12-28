@@ -38,7 +38,7 @@ class ContentBaseAdmin(admin.ModelAdmin):
             'fields': ('featured_image',)
         }),
         ('Publishing', {
-            'fields': ('author', 'status', 'published_at')
+            'fields': ('status', 'published_at')
         }),
         ('SEO', {
             'fields': ('meta_title', 'meta_description'),
@@ -49,6 +49,13 @@ class ContentBaseAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+    def get_form(self, request, obj=None, **kwargs):
+        """Set author initial value to current user."""
+        form = super().get_form(request, obj, **kwargs)
+        if obj is None:  # Creating new object
+            form.base_fields['author'].initial = request.user
+        return form
     
     def save_model(self, request, obj, form, change):
         if not obj.author:

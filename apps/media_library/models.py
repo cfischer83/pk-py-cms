@@ -40,7 +40,7 @@ class Media(models.Model):
     
     # File information
     file = models.FileField(upload_to=media_upload_path)
-    title = models.CharField(max_length=255)
+    title = title = models.CharField(max_length=255, blank=True)
     alt_text = models.CharField(
         max_length=255, 
         blank=True,
@@ -60,16 +60,17 @@ class Media(models.Model):
     # Image dimensions (for images only)
     width = models.PositiveIntegerField(null=True, blank=True)
     height = models.PositiveIntegerField(null=True, blank=True)
-    
-    # Ownership and timestamps
-    uploaded_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='uploaded_media'
-    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    uploaded_by = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.SET_NULL,
+		null=True,
+		blank=True,
+		related_name='media_uploads',
+		help_text='User who uploaded this file'
+	)
     
     class Meta:
         verbose_name = 'media'
